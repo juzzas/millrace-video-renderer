@@ -13,7 +13,7 @@ endif ()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.15.0)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 11)
 
 project(${PROJECT_NAME})
 
@@ -22,7 +22,7 @@ project(${PROJECT_NAME})
 
 # Use wildcard to include all source files under /src
 # Can also use GLOB_RECURSE
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.c")
 
 # set(SDL2_INCLUDE_DIRS /Library/Frameworks/SDL2.framework/Headers)
 # set(SDL2_LIBRARIES /Library/Frameworks/SDL2/framework/SDL2)
