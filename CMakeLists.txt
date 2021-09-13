@@ -1,4 +1,4 @@
-set(PROJECT_NAME sdl2-cpp-project-template)
+set(PROJECT_NAME millrace-video-pi)
 
 # http://derekmolloy.ie/hello-world-introductions-to-cmake/
 
@@ -28,8 +28,7 @@ file(GLOB SOURCES "src/*.cpp")
 # set(SDL2_LIBRARIES /Library/Frameworks/SDL2/framework/SDL2)
 
 find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+include_directories(${SDL2_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
