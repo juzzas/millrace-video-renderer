@@ -8,6 +8,12 @@ char *string = "undef";
 int integer = 22;
 int flag = 0;
 
+#define RESOLUTION_WIDTH  640
+#define RESOLUTION_HIGHT  480
+
+#define FRAMEBUFFER_WIDTH  320
+#define FRAMEFUFFER_HEIGHT  240
+
 int run_loop(void);
 
 int main(int argc, char *argv[])
@@ -62,13 +68,13 @@ int run_loop(void)
 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("SDL2 Starter Project",
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RESOLUTION_WIDTH, RESOLUTION_HIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_Texture *framebuffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, 640, 480);
+    SDL_Texture *framebuffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, FRAMEBUFFER_WIDTH, FRAMEFUFFER_HEIGHT);
 
-    for (int row = 0; row < 256; row++)
+    for (int row = 0; row < 120; row++)
     {
-        memset(&buffer[row * 640], row, 640);
+        memset(&buffer[row * FRAMEBUFFER_WIDTH], 0b00011100, 160);
     }
 
     while (!quit)
@@ -83,7 +89,7 @@ int run_loop(void)
             break;
         }
 
-        SDL_UpdateTexture(framebuffer, NULL, buffer, 640);
+        SDL_UpdateTexture(framebuffer, NULL, buffer, FRAMEBUFFER_WIDTH);
 
 
         SDL_RenderClear(renderer);
