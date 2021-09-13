@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
     return run_loop();
 }
 
+static uint8_t buffer[640*480];
 
 int run_loop(void)
 {
@@ -63,6 +64,12 @@ int run_loop(void)
     SDL_Window* window = SDL_CreateWindow("SDL2 Starter Project",
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_Texture *framebuffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, 640, 480);
+
+    for (int row = 0; row < 256; row++)
+    {
+        memset(&buffer[row * 640], row, 640);
+    }
 
     while (!quit)
     {
@@ -76,8 +83,11 @@ int run_loop(void)
             break;
         }
 
-        SDL_SetRenderDrawColor(renderer, 242, 242, 242, 255);
+        SDL_UpdateTexture(framebuffer, NULL, buffer, 640);
+
+
         SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, framebuffer, NULL, NULL);
 
         SDL_RenderPresent(renderer);
     }
