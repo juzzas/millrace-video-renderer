@@ -11,8 +11,8 @@ int flag = 0;
 #define RESOLUTION_WIDTH  640
 #define RESOLUTION_HIGHT  480
 
-#define FRAMEBUFFER_WIDTH  320
-#define FRAMEFUFFER_HEIGHT  240
+#define FRAMEBUFFER_WIDTH  256
+#define FRAMEFUFFER_HEIGHT  192
 
 int run_loop(void);
 
