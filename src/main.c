@@ -13,10 +13,13 @@ int flag = 0;
 #define RESOLUTION_WIDTH  640
 #define RESOLUTION_HIGHT  480
 
-#define FRAMEBUFFER_WIDTH  256
-#define FRAMEFUFFER_HEIGHT  192
+union
+{
+    FrameBufferBase base;
+    FrameBufferAce ace;
+} S_frame_buffer;
 
-int run_loop(void);
+FrameBufferStatus run_loop(void);
 
 int main(int argc, char *argv[])
 {
@@ -43,7 +46,7 @@ int main(int argc, char *argv[])
         case 'f': flag     = 1;             break;
         default:
             printf("Usage: %s [...]\n", argv[0]);
-            exit(1);
+            exit(FRAMEBUFFER_ERROR_INVALID_PARAMETER);
         }
     }
 
@@ -62,11 +65,9 @@ int main(int argc, char *argv[])
 }
 
 
-int run_loop(void)
+FrameBufferStatus run_loop(void)
 {
     FrameBufferStatus status;
-    FrameBufferAce frame_buffer;
-
 
     bool quit = false;
     SDL_Event event;
@@ -76,7 +77,9 @@ int run_loop(void)
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RESOLUTION_WIDTH, RESOLUTION_HIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    status = frameBufferAceInit(&frame_buffer, renderer);
+    status = frameBufferAceInit(&S_frame_buffer.ace, renderer);
+    if (status != FRAMEBUFFER_OK)
+        return status;
 
     while (!quit)
     {
@@ -90,18 +93,21 @@ int run_loop(void)
             break;
         }
 
-        frameBufferUpdate(&frame_buffer.base);
+        frameBufferUpdate(&S_frame_buffer.base);
 
-        frameBufferRender(&frame_buffer.base);
+        frameBufferRender(&S_frame_buffer.base);
 
-        frameBufferPresent(&frame_buffer.base);
+        frameBufferPresent(&S_frame_buffer.base);
     }
 
-    frameBufferDestroy(&frame_buffer.base);
+    frameBufferDestroy(&S_frame_buffer.base);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+
+    return FRAMEBUFFER_OK;
 }
 
 

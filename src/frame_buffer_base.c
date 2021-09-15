@@ -25,6 +25,8 @@ frameBufferBaseInit(FrameBufferBase* base, SDL_Renderer* renderer, uint8_t* buff
 
     if (!base->framebuffer)
         return FRAMEBUFFER_ERROR_OUT_OF_RESOURCE;
+
+    return FRAMEBUFFER_OK;
 }
 
 
