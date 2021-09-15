@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "frame_buffer_ace.h"
+
 char *string = "undef";
 int integer = 22;
 int flag = 0;
@@ -59,23 +61,22 @@ int main(int argc, char *argv[])
     return run_loop();
 }
 
-static uint8_t buffer[640*480];
 
 int run_loop(void)
 {
+    FrameBufferStatus status;
+    FrameBufferAce frame_buffer;
+
+
     bool quit = false;
     SDL_Event event;
 
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow("SDL2 Starter Project",
+    SDL_Window* window = SDL_CreateWindow("MillRACE",
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RESOLUTION_WIDTH, RESOLUTION_HIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_Texture *framebuffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, FRAMEBUFFER_WIDTH, FRAMEFUFFER_HEIGHT);
 
-    for (int row = 0; row < 120; row++)
-    {
-        memset(&buffer[row * FRAMEBUFFER_WIDTH], 0b00011100, 160);
-    }
+    status = frameBufferAceInit(&frame_buffer, renderer);
 
     while (!quit)
     {
@@ -89,14 +90,14 @@ int run_loop(void)
             break;
         }
 
-        SDL_UpdateTexture(framebuffer, NULL, buffer, FRAMEBUFFER_WIDTH);
+        frameBufferUpdate(&frame_buffer.base);
 
+        frameBufferRender(&frame_buffer.base);
 
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, framebuffer, NULL, NULL);
-
-        SDL_RenderPresent(renderer);
+        frameBufferPresent(&frame_buffer.base);
     }
+
+    frameBufferDestroy(&frame_buffer.base);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
