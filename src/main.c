@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "frame_buffer_ace.h"
+#include "frame_buffer_test.h"
 
 char *string = "undef";
 int integer = 22;
@@ -17,6 +18,7 @@ union
 {
     FrameBufferBase base;
     FrameBufferAce ace;
+    FrameBufferTest test;
 } S_frame_buffer;
 
 FrameBufferStatus run_loop(void);
@@ -73,11 +75,12 @@ FrameBufferStatus run_loop(void)
     SDL_Event event;
 
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow("MillRACE",
+    SDL_Window* window = SDL_CreateWindow("SDL Render test",
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RESOLUTION_WIDTH, RESOLUTION_HIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    status = frameBufferAceInit(&S_frame_buffer.ace, renderer);
+    //status = frameBufferAceInit(&S_frame_buffer.ace, renderer);
+    status = frameBufferTestInit(&S_frame_buffer.test, renderer);
     if (status != FRAMEBUFFER_OK)
         return status;
 

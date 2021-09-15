@@ -10,16 +10,16 @@
 #define FRAME_BUFFER_ACE_WIDTH  256
 #define FRAME_BUFFER_ACE_HEIGHT  192
 
-#define FRAME_BUFFER_RAM_SCREEN_SIZE  (32 * 24)
-#define FRAME_BUFFER_RAM_CHARACTER_SIZE  (8 * 128)
+#define FRAME_BUFFER_ACE_RAM_SCREEN_SIZE  (32 * 24)
+#define FRAME_BUFFER_ACE_RAM_CHARACTER_SIZE  (8 * 128)
 
 typedef struct FrameBufferAce
 {
     FrameBufferBase base;
     uint8_t buffer[FRAME_BUFFER_ACE_WIDTH * FRAME_BUFFER_ACE_HEIGHT];
 
-    uint8_t screen_ram[24 * 32];
-    uint8_t character_ram[8 * 128];
+    uint8_t screen_ram[FRAME_BUFFER_ACE_RAM_SCREEN_SIZE];
+    uint8_t character_ram[FRAME_BUFFER_ACE_RAM_CHARACTER_SIZE];
 } FrameBufferAce;
 
 
