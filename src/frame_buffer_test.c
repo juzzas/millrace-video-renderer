@@ -111,7 +111,7 @@ static FrameBufferStatus frameBufferTestUpdate(FrameBufferBase *base)
                 chr_bitmap_row = S_test_font[(screen_char * 8) + screen_row_bit];
             }
 
-            if (chr_bitmap_row & (1 << screen_col_bit))
+            if (chr_bitmap_row & (0x80 >> screen_col_bit))
                 frame_buffer->buffer[(pixel_row * frame_buffer->base.width) + pixel_col] = 0xff;
             else
                 frame_buffer->buffer[(pixel_row * frame_buffer->base.width) + pixel_col] = 0x00;
