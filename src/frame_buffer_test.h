@@ -15,7 +15,7 @@
 typedef struct FrameBufferTest
 {
     FrameBufferBase base;
-    uint8_t buffer[FRAME_BUFFER_TEST_WIDTH * FRAME_BUFFER_TEST_HEIGHT];
+    uint8_t pixel_buffer[FRAME_BUFFER_TEST_WIDTH * FRAME_BUFFER_TEST_HEIGHT];
 
     uint8_t screen_ram[FRAME_BUFFER_TEST_RAM_SCREEN_SIZE];
 } FrameBufferTest;

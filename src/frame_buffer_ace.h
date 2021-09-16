@@ -16,7 +16,7 @@
 typedef struct FrameBufferAce
 {
     FrameBufferBase base;
-    uint8_t buffer[FRAME_BUFFER_ACE_WIDTH * FRAME_BUFFER_ACE_HEIGHT];
+    uint8_t pixel_buffer[FRAME_BUFFER_ACE_WIDTH * FRAME_BUFFER_ACE_HEIGHT];
 
     uint8_t screen_ram[FRAME_BUFFER_ACE_RAM_SCREEN_SIZE];
     uint8_t character_ram[FRAME_BUFFER_ACE_RAM_CHARACTER_SIZE];

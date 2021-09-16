@@ -11,7 +11,7 @@ static FrameBufferStatus frameBufferAceUpdate(FrameBufferBase *base)
 
     FrameBufferStatus status;
 
-    memset(frame_buffer->buffer, 0, (FRAME_BUFFER_ACE_WIDTH * FRAME_BUFFER_ACE_HEIGHT));
+    memset(frame_buffer->pixel_buffer, 0, (FRAME_BUFFER_ACE_WIDTH * FRAME_BUFFER_ACE_HEIGHT));
 
     status = frameBufferBaseUpdate(base);
 
@@ -21,7 +21,7 @@ static FrameBufferStatus frameBufferAceUpdate(FrameBufferBase *base)
 
 FrameBufferStatus frameBufferAceInit(FrameBufferAce* frame_buffer, SDL_Renderer* renderer)
 {
-    FrameBufferStatus status = frameBufferBaseInit(&frame_buffer->base, renderer, frame_buffer->buffer,
+    FrameBufferStatus status = frameBufferBaseInit(&frame_buffer->base, renderer, frame_buffer->pixel_buffer,
             FRAME_BUFFER_ACE_WIDTH,
             FRAME_BUFFER_ACE_HEIGHT,
             SDL_PIXELFORMAT_RGB332);

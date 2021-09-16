@@ -89,9 +89,9 @@ static FrameBufferStatus frameBufferTestUpdate(FrameBufferBase *base)
     FrameBufferStatus status;
     int pixel_row, pixel_col;
 
-    for (pixel_row = 0; pixel_row < frame_buffer->base.height; pixel_row++)
+    for (pixel_row = 0; pixel_row < frame_buffer->base.pixel_buffer_height; pixel_row++)
     {
-        for (pixel_col = 0; pixel_col < frame_buffer->base.width; pixel_col++)
+        for (pixel_col = 0; pixel_col < frame_buffer->base.pixel_buffer_width; pixel_col++)
         {
             int screen_row = pixel_row / 8;
             int screen_col = pixel_col / 8;
@@ -112,9 +112,9 @@ static FrameBufferStatus frameBufferTestUpdate(FrameBufferBase *base)
             }
 
             if (chr_bitmap_row & (0x80 >> screen_col_bit))
-                frame_buffer->buffer[(pixel_row * frame_buffer->base.width) + pixel_col] = 0xff;
+                frame_buffer->pixel_buffer[(pixel_row * frame_buffer->base.pixel_buffer_width) + pixel_col] = 0xff;
             else
-                frame_buffer->buffer[(pixel_row * frame_buffer->base.width) + pixel_col] = 0x00;
+                frame_buffer->pixel_buffer[(pixel_row * frame_buffer->base.pixel_buffer_width) + pixel_col] = 0x00;
 
         }
 
@@ -128,7 +128,7 @@ static FrameBufferStatus frameBufferTestUpdate(FrameBufferBase *base)
 
 FrameBufferStatus frameBufferTestInit(FrameBufferTest *frame_buffer, SDL_Renderer *renderer)
 {
-    FrameBufferStatus status = frameBufferBaseInit(&frame_buffer->base, renderer, frame_buffer->buffer,
+    FrameBufferStatus status = frameBufferBaseInit(&frame_buffer->base, renderer, frame_buffer->pixel_buffer,
             FRAME_BUFFER_TEST_WIDTH,
             FRAME_BUFFER_TEST_HEIGHT,
             SDL_PIXELFORMAT_RGB332);

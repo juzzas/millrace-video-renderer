@@ -14,11 +14,11 @@ struct FrameBufferBase
 {
     FrameBufferMethods  methods;
 
-    uint8_t *buffer;
-    int width;
-    int height;
+    uint8_t *pixel_buffer;
+    int pixel_buffer_width;
+    int pixel_buffer_height;
 
-    SDL_Texture *framebuffer;
+    SDL_Texture *pixel_buffer_texture;
     SDL_Renderer *renderer;
 };
 
@@ -33,7 +33,7 @@ struct FrameBufferBase
  * @return pointer to FrameBufferBase if successful, else NULL
  */
 FrameBufferStatus
-frameBufferBaseInit(FrameBufferBase* base, SDL_Renderer* renderer, uint8_t* buffer, int width, int height,
+frameBufferBaseInit(FrameBufferBase* base, SDL_Renderer* renderer, uint8_t* pixel_buffer, int width, int height,
         SDL_PixelFormatEnum pixel_format);
 
 
