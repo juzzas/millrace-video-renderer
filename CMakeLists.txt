@@ -13,7 +13,7 @@ endif ()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.15.0)
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 project(${PROJECT_NAME})
 
@@ -27,8 +27,23 @@ file(GLOB SOURCES "src/*.c")
 # set(SDL2_INCLUDE_DIRS /Library/Frameworks/SDL2.framework/Headers)
 # set(SDL2_LIBRARIES /Library/Frameworks/SDL2/framework/SDL2)
 
+find_package(Boost REQUIRED COMPONENTS
+        program_options system filesystem unit_test_framework)
+
+add_library(boost INTERFACE IMPORTED)
+set_property(TARGET boost PROPERTY
+        INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR})
+
+
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+add_executable(${PROJECT_NAME}
+        src/main.cpp
+        ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME}
+        ${SDL2_LIBRARIES}
+        Boost::program_options
+        boost
+        ${CMAKE_THREAD_LIBS_INIT})

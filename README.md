@@ -16,6 +16,7 @@ The following packages are required:
 
 * cmake
 * libsdl2-dev
+* libboost-all-dev
 * libgpiod-dev
 
 
