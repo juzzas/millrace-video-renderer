@@ -7,8 +7,10 @@
 
 #include <SDL2/SDL.h>
 
-#include "frame_buffer_ace.h"
-#include "frame_buffer_test.h"
+#include "FrameBufferAce.h"
+#include "FrameBufferTest.h"
+
+namespace po = boost::program_options;
 
 char *string = "undef";
 int integer = 22;
@@ -17,12 +19,6 @@ int flag = 0;
 #define RESOLUTION_WIDTH  1024
 #define RESOLUTION_HIGHT  768
 
-union
-{
-    FrameBufferBase base;
-    FrameBufferAce ace;
-    FrameBufferTest test;
-} S_frame_buffer;
 
 FrameBufferStatus run_loop(void);
 
@@ -85,34 +81,36 @@ FrameBufferStatus run_loop(void)
 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("MillRACE test",
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RESOLUTION_WIDTH, RESOLUTION_HIGHT, 0);
+                                          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RESOLUTION_WIDTH, RESOLUTION_HIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    status = frameBufferAceInit(&S_frame_buffer.ace, renderer);
+    //status = frameBufferAceInit(&S_frame_buffer.ace, renderer);
     //status = frameBufferTestInit(&S_frame_buffer.test, renderer);
-    if (status != FRAMEBUFFER_OK)
-        return status;
-
-    while (!quit)
     {
-        SDL_Delay(10);
-        SDL_PollEvent(&event);
+        //FrameBufferTest frame_buffer(renderer);
+        FrameBufferAce frame_buffer(renderer);
+        if (status != FRAMEBUFFER_OK)
+            return status;
 
-        switch (event.type)
+        while (!quit)
         {
-        case SDL_QUIT:
-            quit = true;
-            break;
+            SDL_Delay(10);
+            SDL_PollEvent(&event);
+
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+            }
+
+            frame_buffer.update();
+
+            frame_buffer.render();
+
+            frame_buffer.present();
         }
-
-        frameBufferUpdate(&S_frame_buffer.base);
-
-        frameBufferRender(&S_frame_buffer.base);
-
-        frameBufferPresent(&S_frame_buffer.base);
     }
-
-    frameBufferDestroy(&S_frame_buffer.base);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

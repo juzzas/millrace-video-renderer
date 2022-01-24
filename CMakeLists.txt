@@ -40,6 +40,9 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
+        src/FrameBuffer.cpp
+        src/FrameBufferTest.cpp
+        src/FrameBufferAce.cpp
         ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
