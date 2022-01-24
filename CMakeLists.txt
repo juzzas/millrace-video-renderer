@@ -20,10 +20,6 @@ project(${PROJECT_NAME})
 # Can manually add sources as follows if desired:
 # set(SOURCES src/main.cpp src/anotherfile.cpp)
 
-# Use wildcard to include all source files under /src
-# Can also use GLOB_RECURSE
-file(GLOB SOURCES "src/*.c")
-
 # set(SDL2_INCLUDE_DIRS /Library/Frameworks/SDL2.framework/Headers)
 # set(SDL2_LIBRARIES /Library/Frameworks/SDL2/framework/SDL2)
 
