@@ -7,6 +7,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "FrameBufferFactory.h"
 #include "FrameBufferAce.h"
 #include "FrameBufferTest.h"
 
@@ -75,6 +76,7 @@ int main(int argc, char *argv[])
 FrameBufferStatus run_loop(void)
 {
     FrameBufferStatus status;
+    FrameBufferFactory buffer_factory;
 
     bool quit = false;
     SDL_Event event;
@@ -88,9 +90,10 @@ FrameBufferStatus run_loop(void)
     //status = frameBufferTestInit(&S_frame_buffer.test, renderer);
     {
         //FrameBufferTest frame_buffer(renderer);
-        FrameBufferAce frame_buffer(renderer);
-        if (status != FRAMEBUFFER_OK)
-            return status;
+        std::shared_ptr<FrameBuffer> frame_buffer = FrameBufferFactory::make_frame_buffer(std::string("ssss"), renderer);
+
+        if (frame_buffer == nullptr)
+            return FRAMEBUFFER_ERROR_OUT_OF_RESOURCE;
 
         while (!quit)
         {
@@ -104,11 +107,11 @@ FrameBufferStatus run_loop(void)
                     break;
             }
 
-            frame_buffer.update();
+            frame_buffer->update();
 
-            frame_buffer.render();
+            frame_buffer->render();
 
-            frame_buffer.present();
+            frame_buffer->present();
         }
     }
 

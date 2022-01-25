@@ -37,6 +37,7 @@ include_directories(${SDL2_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/FrameBuffer.cpp
+        src/FrameBufferFactory.cpp
         src/FrameBufferTest.cpp
         src/FrameBufferAce.cpp
         ${SOURCES})
