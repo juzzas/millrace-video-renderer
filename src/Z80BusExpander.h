@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <gpiod.hpp>
 
 #ifndef Z80BUSEXPANDER_H
 #define Z80BUSEXPANDER_H
@@ -44,6 +45,8 @@ private:
     uint32_t m_speed;
     uint16_t m_delay;
     int m_fd;
+
+    struct gpiod_chip *m_chip;
 };
 
 

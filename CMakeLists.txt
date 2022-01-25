@@ -34,6 +34,11 @@ set_property(TARGET boost PROPERTY
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+find_library(GPIOD_LIBRARY NAMES libgpiod.so)
+if(NOT GPIOD_LIBRARY)
+  message(FATAL_ERROR "gpiod library not found. Install apt install libgpiod-dev")
+endif()
+
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/FrameBuffer.cpp
@@ -41,10 +46,11 @@ add_executable(${PROJECT_NAME}
         src/FrameBufferTest.cpp
         src/FrameBufferAce.cpp
         src/Z80BusExpander.cpp
-        ${SOURCES})
+        )
 
 target_link_libraries(${PROJECT_NAME}
         ${SDL2_LIBRARIES}
         Boost::program_options
         boost
-        ${CMAKE_THREAD_LIBS_INIT})
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${GPIOD_LIBRARY})
