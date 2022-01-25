@@ -40,6 +40,7 @@ add_executable(${PROJECT_NAME}
         src/FrameBufferFactory.cpp
         src/FrameBufferTest.cpp
         src/FrameBufferAce.cpp
+        src/Z80BusExpander.cpp
         ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
