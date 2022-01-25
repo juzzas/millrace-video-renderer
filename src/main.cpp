@@ -86,15 +86,9 @@ FrameBufferStatus run_loop(void)
                                           SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RESOLUTION_WIDTH, RESOLUTION_HIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    //status = frameBufferAceInit(&S_frame_buffer.ace, renderer);
-    //status = frameBufferTestInit(&S_frame_buffer.test, renderer);
+    std::shared_ptr<FrameBuffer> frame_buffer = FrameBufferFactory::make_frame_buffer(std::string("ace"), renderer);
+    if (frame_buffer != nullptr)
     {
-        //FrameBufferTest frame_buffer(renderer);
-        std::shared_ptr<FrameBuffer> frame_buffer = FrameBufferFactory::make_frame_buffer(std::string("ssss"), renderer);
-
-        if (frame_buffer == nullptr)
-            return FRAMEBUFFER_ERROR_OUT_OF_RESOURCE;
-
         while (!quit)
         {
             SDL_Delay(10);
