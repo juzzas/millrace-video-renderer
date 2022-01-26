@@ -11,10 +11,12 @@
 #include "Z80BusExpander.h"
 
 const std::string Z80BusExpander::Z80BUS_SPI_DEFAULT_DEVICE = "/dev/spidev0.0";
+const std::string Z80BusExpander::Z80BUS_CHIP_GPIO_NAME = "gpiochip0";
 
 Z80BusExpander::Z80BusExpander()
         : m_bits(8),
-          m_speed(500000)
+          m_speed(500000),
+          m_chip(Z80BUS_CHIP_GPIO_NAME)
 {
     m_device_path = Z80BusExpander::Z80BUS_SPI_DEFAULT_DEVICE;
     open_spi();

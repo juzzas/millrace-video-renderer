@@ -14,6 +14,8 @@ class Z80BusExpander
 {
 public:
     static const std::string Z80BUS_SPI_DEFAULT_DEVICE;
+    static const std::string Z80BUS_CHIP_GPIO_NAME;
+
     const uint8_t SPI_CONFIG_MODE = 0;
     const uint8_t SPI_CONFIG_BITS = 8;
     const uint32_t SPI_CONFIG_SPEED = 500000;
@@ -46,7 +48,7 @@ private:
     uint16_t m_delay;
     int m_fd;
 
-    struct gpiod_chip *m_chip;
+    gpiod::chip m_chip;
 };
 
 

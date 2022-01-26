@@ -5,7 +5,7 @@
 #ifndef FRAMEBUFFERACE_H
 #define FRAMEBUFFERACE_H
 
-#include "FrameBuffer.h"
+#include "FrameBufferZ80.h"
 
 #define FRAME_BUFFER_ACE_WIDTH  256
 #define FRAME_BUFFER_ACE_HEIGHT  192
@@ -14,7 +14,7 @@
 #define FRAME_BUFFER_ACE_RAM_CHARACTER_SIZE  (8 * 128)
 
 
-class FrameBufferAce : public FrameBuffer
+class FrameBufferAce : public FrameBufferZ80
 {
 public:
     FrameBufferAce(SDL_Renderer *renderer);

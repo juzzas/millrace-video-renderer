@@ -3,7 +3,7 @@
 //
 
 #include "FrameBufferAce.h"
-FrameBufferAce::FrameBufferAce(SDL_Renderer *renderer): FrameBuffer()
+FrameBufferAce::FrameBufferAce(SDL_Renderer *renderer): FrameBufferZ80()
 {
     FrameBufferStatus status = init(renderer, pixel_buffer,
                                                    FRAME_BUFFER_ACE_WIDTH,
