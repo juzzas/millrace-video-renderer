@@ -49,6 +49,10 @@ private:
     int m_fd;
 
     gpiod::chip m_chip;
+    gpiod::line m_pic_status_ready;
+    gpiod::line m_pic_data_ready;
+    gpiod::line m_pic_busy;
+
 };
 
 

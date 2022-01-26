@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <iostream>
 
 #include "Z80BusExpander.h"
 
@@ -18,8 +19,26 @@ Z80BusExpander::Z80BusExpander()
           m_speed(500000),
           m_chip(Z80BUS_CHIP_GPIO_NAME)
 {
+    gpiod::line_request config;
+
+
     m_device_path = Z80BusExpander::Z80BUS_SPI_DEFAULT_DEVICE;
     open_spi();
+    m_pic_busy = m_chip.get_line(23);
+    m_pic_data_ready = m_chip.get_line(24);
+    m_pic_status_ready = m_chip.get_line(25);
+
+    config.consumer = "z80_expand";
+    config.request_type = gpiod::line_request::DIRECTION_INPUT;
+    //config.flags = gpiod::line_request::BIAS_PULL_UP;
+
+    m_pic_busy.request(config);
+    m_pic_data_ready.request(config);
+    m_pic_status_ready.request(config);
+
+    if (m_pic_busy.is_requested())
+        std::cout << "requested." << std::endl ;
+
 }
 
 
