@@ -8,6 +8,8 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 #include "Z80BusExpander.h"
 
@@ -37,7 +39,17 @@ Z80BusExpander::Z80BusExpander()
     m_pic_status_ready.request(config);
 
     if (m_pic_busy.is_requested())
-        std::cout << "requested." << std::endl ;
+        std::cout << "line PIC_BUSY requested" << std::endl ;
+
+    if (m_pic_data_ready.is_requested())
+        std::cout << "line PIC_DATA_READY requested" << std::endl ;
+
+    if (m_pic_status_ready.is_requested())
+        std::cout << "line PIC_STATUS_READY requested" << std::endl ;
+
+    std::cout << "PIC_BUSY = " << m_pic_busy.get_value() << std::endl;
+    std::cout << "PIC_DATA_READY = " << m_pic_data_ready.get_value() << std::endl;
+    std::cout << "PIC_STATUS_READY = " << m_pic_status_ready.get_value() << std::endl;
 
 }
 
@@ -56,16 +68,50 @@ Z80BusExpander::~Z80BusExpander()
     close_spi();
 }
 
+void Z80BusExpander::do_read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
+{
+
+    while (m_pic_busy.get_value() == 1);
+
+    uint8_t set_addr_msb[] = { 0x90, (uint8_t)((address & 0xff00) >> 8) };
+    transfer(set_addr_msb, nullptr, 2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    if ((address & 0x00ff) != 0)
+    {
+        uint8_t set_addr_lsb[] = { 0xA0, (uint8_t)(address & 0xff) };
+        transfer(set_addr_lsb, nullptr, 2);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+
+    uint8_t set_read_command[] = { (uint8_t)(0xB0 | ((buffer_size & 0x0f00) >> 8)), (uint8_t)(buffer_size & 0x00ff) };
+    transfer(set_read_command, nullptr, 2);
+
+    while (m_pic_data_ready.get_value() != 1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    transfer(nullptr, buffer, buffer_size);
+}
+
 
 void Z80BusExpander::write_mem_data(uint16_t address, uint8_t data)
 {
-
 }
 
 
 uint8_t Z80BusExpander::read_mem_data(uint16_t address)
 {
-    return 0xff;
+    uint8_t val = 0xff;
+
+    do_read_mem_block(address, &val, 1);
+
+    return val;
+}
+
+
+void Z80BusExpander::read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
+{
+    do_read_mem_block(address, buffer, buffer_size);
 }
 
 
@@ -147,28 +193,30 @@ void Z80BusExpander::setup_spi()
     }
 }
 
-void Z80BusExpander::transfer(const std::vector<uint8_t> &message, std::vector<uint8_t> &response) const
+
+void Z80BusExpander::transfer(const uint8_t *message, uint8_t *response, size_t len) const
 {
     int ret;
     int i;
 
-    response.reserve(message.size());
-
     struct spi_ioc_transfer tr = {
-        .tx_buf = (unsigned long)message.data(),
-        .rx_buf = (unsigned long)response.data(),
-        .len = (unsigned int)message.size(),
+        .tx_buf = (unsigned long)message,
+        .rx_buf = (unsigned long)response,
+        .len = (unsigned int)len,
         .speed_hz = m_speed,
         .delay_usecs = m_delay,
         .bits_per_word = m_bits,
         };
 
-    for (i = 0; i < message.size(); i++) {
-        if (!(i % 16))
-            puts("");
-        printf("%02X ", message[i]);
+    if (message)
+    {
+        for (i = 0; i < len; i++) {
+            if (!(i % 16))
+                puts("");
+            printf("%02X ", message[i]);
+        }
+        puts("");
     }
-    puts("");
 
     ret = ioctl(m_fd, SPI_IOC_MESSAGE(1), &tr);
     if (ret < 1)
@@ -176,11 +224,28 @@ void Z80BusExpander::transfer(const std::vector<uint8_t> &message, std::vector<u
         throw std::runtime_error("can't send spi message");
     }
 
-    for (i = 0; i < message.size(); i++) {
-        if (!(i % 16))
-            puts("");
-        printf("%02X ", response[i]);
+    if (response)
+    {
+        for (i = 0; i < len; i++) {
+            if (!(i % 16))
+                puts("");
+            printf("%02X ", response[i]);
+        }
+        puts("");
     }
-    puts("");
+}
+
+uint8_t Z80BusExpander::read_status(void)
+{
+    uint8_t set_addr_msb[] = { 0x80, 0x00, 0xff };
+    transfer(set_addr_msb, nullptr, 2);
+
+    while (m_pic_data_ready.get_value() == 0);
+
+    uint8_t status_val;
+    //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    transfer(nullptr, &status_val, 1);
+
+    return status_val;
 }
 

@@ -29,16 +29,20 @@ public:
 public:
     void write_mem_data(uint16_t address, uint8_t data);
     uint8_t read_mem_data(uint16_t address);
+    void read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size);
 
     void write_io_data(uint16_t address, uint8_t data);
     uint8_t read_io_data(uint16_t address);
+
+    uint8_t read_status(void);
 
 private:
     void open_spi();
     void close_spi();
     void setup_spi();
 
-    void transfer(const std::vector<uint8_t> &message, std::vector<uint8_t> &response) const;
+    void transfer(const uint8_t *message, uint8_t *response, size_t len) const;
+    void do_read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size);
 
 
     std::string m_device_path;

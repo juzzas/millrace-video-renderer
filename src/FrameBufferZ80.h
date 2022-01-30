@@ -14,7 +14,7 @@ public:
     FrameBufferZ80();
     virtual ~FrameBufferZ80();
 
-private:
+protected:
     Z80BusExpander m_z80;
 };
 
