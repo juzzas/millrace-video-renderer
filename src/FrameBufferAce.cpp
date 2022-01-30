@@ -34,7 +34,7 @@ FrameBufferStatus FrameBufferAce::update()
 
     uint8_t z80_status = m_z80.read_status();
 
-    m_z80.read_mem_block(0x0000, screen_ram, 16);
+    m_z80.read_mem_block(0x9000, screen_ram, 32);
 
     for (pixel_row = 0; pixel_row < m_pixel_buffer_height; pixel_row++)
     {

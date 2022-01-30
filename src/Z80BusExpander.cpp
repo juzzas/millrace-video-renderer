@@ -84,6 +84,18 @@ void Z80BusExpander::do_read_mem_block(uint16_t address, uint8_t *buffer, size_t
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
+#if 1
+    uint8_t set_read_command[] = { (uint8_t)(0xB0 | ((buffer_size & 0x0f00) >> 8)), (uint8_t)(buffer_size & 0x00ff) };
+    transfer(set_read_command, nullptr, 2);
+
+    while (m_pic_data_ready.get_value() != 1);
+    for (int i = 0; i < buffer_size; i++)
+    {
+        transfer(nullptr, buffer, 1);
+        buffer++;
+    }
+
+#else
     uint8_t set_read_command[] = { (uint8_t)(0xB0 | ((buffer_size & 0x0f00) >> 8)), (uint8_t)(buffer_size & 0x00ff) };
     transfer(set_read_command, nullptr, 2);
 
@@ -91,6 +103,9 @@ void Z80BusExpander::do_read_mem_block(uint16_t address, uint8_t *buffer, size_t
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     transfer(nullptr, buffer, buffer_size);
+#endif
+
+
 }
 
 
@@ -243,7 +258,6 @@ uint8_t Z80BusExpander::read_status(void)
     while (m_pic_data_ready.get_value() == 0);
 
     uint8_t status_val;
-    //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     transfer(nullptr, &status_val, 1);
 
     return status_val;
