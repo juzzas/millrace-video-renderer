@@ -50,19 +50,5 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 add_subdirectory(lib)
+add_subdirectory(tools)
 
-add_executable(${PROJECT_NAME}
-        src/main.cpp
-        src/FrameBuffer.cpp
-        src/FrameBufferFactory.cpp
-        src/FrameBufferTest.cpp
-        src/FrameBufferAce.cpp
-        src/FrameBufferZ80.cpp)
-
-target_link_libraries(${PROJECT_NAME}
-        ${SDL2_LIBRARIES}
-        Boost::program_options
-        boost
-        ${CMAKE_THREAD_LIBS_INIT}
-        z80-bus-expander
-        )

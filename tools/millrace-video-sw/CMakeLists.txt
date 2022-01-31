@@ -13,5 +13,13 @@
 # OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-add_subdirectory(z80-bus-expander)
-add_subdirectory(z80-frame-buffer)
+add_executable(millrace-video-sw
+        src/main.cpp)
+
+target_link_libraries(millrace-video-sw
+        ${SDL2_LIBRARIES}
+        Boost::program_options
+        boost
+        ${CMAKE_THREAD_LIBS_INIT}
+        z80-frame-buffer
+        )

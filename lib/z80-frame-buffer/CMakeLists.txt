@@ -13,5 +13,13 @@
 # OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-add_subdirectory(z80-bus-expander)
-add_subdirectory(z80-frame-buffer)
+add_library(z80-frame-buffer
+        src/FrameBuffer.cpp
+        src/FrameBufferFactory.cpp
+        src/FrameBufferTest.cpp
+        src/FrameBufferAce.cpp
+        src/FrameBufferZ80.cpp)
+
+target_include_directories(z80-frame-buffer PUBLIC h)
+
+target_link_libraries(z80-frame-buffer z80-bus-expander)
