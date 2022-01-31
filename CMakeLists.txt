@@ -1,3 +1,18 @@
+# Copyright 2022 Justin Skists <justin.skists@juzza.co.uk>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+# OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 set(PROJECT_NAME millrace-video-pi)
 
 # http://derekmolloy.ie/hello-world-introductions-to-cmake/
@@ -34,10 +49,7 @@ set_property(TARGET boost PROPERTY
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-find_library(GPIOD_LIBRARY NAMES libgpiodcxx.so)
-if(NOT GPIOD_LIBRARY)
-  message(FATAL_ERROR "gpiod library not found. Install apt install libgpiod-dev")
-endif()
+add_subdirectory(lib)
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
@@ -45,7 +57,6 @@ add_executable(${PROJECT_NAME}
         src/FrameBufferFactory.cpp
         src/FrameBufferTest.cpp
         src/FrameBufferAce.cpp
-        src/Z80BusExpander.cpp
         src/FrameBufferZ80.cpp)
 
 target_link_libraries(${PROJECT_NAME}
@@ -53,4 +64,5 @@ target_link_libraries(${PROJECT_NAME}
         Boost::program_options
         boost
         ${CMAKE_THREAD_LIBS_INIT}
-        gpiodcxx)
+        z80-bus-expander
+        )
