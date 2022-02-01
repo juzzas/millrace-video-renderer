@@ -30,39 +30,34 @@ const std::string Z80BusExpander::Z80BUS_CHIP_GPIO_NAME = "gpiochip0";
 
 Z80BusExpander::Z80BusExpander()
         : m_bits(8),
-          m_speed(500000),
-          m_chip(Z80BUS_CHIP_GPIO_NAME)
+          m_speed(500000)
 {
     gpiod::line_request config;
 
-
     m_device_path = Z80BusExpander::Z80BUS_SPI_DEFAULT_DEVICE;
-    open_spi();
+
+    m_chip.open(Z80BUS_CHIP_GPIO_NAME);
     m_pic_busy = m_chip.get_line(23);
     m_pic_data_ready = m_chip.get_line(24);
     m_pic_status_ready = m_chip.get_line(25);
 
     config.consumer = "z80_expand";
     config.request_type = gpiod::line_request::DIRECTION_INPUT;
-    //config.flags = gpiod::line_request::BIAS_PULL_UP;
 
     m_pic_busy.request(config);
     m_pic_data_ready.request(config);
     m_pic_status_ready.request(config);
 
-    if (m_pic_busy.is_requested())
-        std::cout << "line PIC_BUSY requested" << std::endl ;
+    if (!m_pic_busy.is_requested())
+        throw std::runtime_error("unable to request PIC_BUSY line");
 
-    if (m_pic_data_ready.is_requested())
-        std::cout << "line PIC_DATA_READY requested" << std::endl ;
+    if (!m_pic_data_ready.is_requested())
+        throw std::runtime_error("unable to request PIC_DATA_READY line");
 
-    if (m_pic_status_ready.is_requested())
-        std::cout << "line PIC_STATUS_READY requested" << std::endl ;
+    if (!m_pic_status_ready.is_requested())
+        throw std::runtime_error("unable to request PIC_STATUS_READY line");
 
-    std::cout << "PIC_BUSY = " << m_pic_busy.get_value() << std::endl;
-    std::cout << "PIC_DATA_READY = " << m_pic_data_ready.get_value() << std::endl;
-    std::cout << "PIC_STATUS_READY = " << m_pic_status_ready.get_value() << std::endl;
-
+    open_spi();
 }
 
 
@@ -138,7 +133,10 @@ uint8_t Z80BusExpander::read_mem_data(uint16_t address)
 
 void Z80BusExpander::read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
 {
-    do_read_mem_block(address, buffer, buffer_size);
+    //do_read_mem_block(address, buffer, buffer_size);
+    for (auto i = 0; i < buffer_size; i++)
+        buffer[i] = (uint8_t)(i % 256);
+
 }
 
 

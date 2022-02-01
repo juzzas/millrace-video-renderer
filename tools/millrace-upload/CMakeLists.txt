@@ -13,6 +13,13 @@
 # OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-add_subdirectory(millrace-video-sw)
-add_subdirectory(millrace-memdump)
-add_subdirectory(millrace-upload)
+add_executable(millrace-upload
+        src/main.cpp)
+
+target_link_libraries(millrace-upload
+        ${SDL2_LIBRARIES}
+        Boost::program_options
+        boost
+        ${CMAKE_THREAD_LIBS_INIT}
+        z80-bus-expander
+        )
