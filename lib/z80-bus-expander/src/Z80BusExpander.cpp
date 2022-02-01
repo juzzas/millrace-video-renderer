@@ -262,6 +262,8 @@ void Z80BusExpander::transfer(const uint8_t *message, uint8_t *response, size_t 
 
 uint8_t Z80BusExpander::read_status(void)
 {
+    while (m_pic_busy.get_value() == 1);
+
     uint8_t set_addr_msb[] = { 0x80, 0x00, 0xff };
     transfer(set_addr_msb, nullptr, 2);
 
