@@ -133,9 +133,9 @@ uint8_t Z80BusExpander::read_mem_data(uint16_t address)
 
 void Z80BusExpander::read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
 {
-    //do_read_mem_block(address, buffer, buffer_size);
-    for (auto i = 0; i < buffer_size; i++)
-        buffer[i] = (uint8_t)(i % 256);
+    do_read_mem_block(address, buffer, buffer_size);
+    //for (auto i = 0; i < buffer_size; i++)
+    //    buffer[i] = (uint8_t)(i % 256);
 
 }
 
@@ -233,6 +233,7 @@ void Z80BusExpander::transfer(const uint8_t *message, uint8_t *response, size_t 
         .bits_per_word = m_bits,
         };
 
+#if 0
     if (message)
     {
         for (i = 0; i < len; i++) {
@@ -242,13 +243,13 @@ void Z80BusExpander::transfer(const uint8_t *message, uint8_t *response, size_t 
         }
         puts("");
     }
-
+#endif
     ret = ioctl(m_fd, SPI_IOC_MESSAGE(1), &tr);
     if (ret < 1)
     {
         throw std::runtime_error("can't send spi message");
     }
-
+#if 0
     if (response)
     {
         for (i = 0; i < len; i++) {
@@ -258,6 +259,7 @@ void Z80BusExpander::transfer(const uint8_t *message, uint8_t *response, size_t 
         }
         puts("");
     }
+#endif
 }
 
 uint8_t Z80BusExpander::read_status(void)
