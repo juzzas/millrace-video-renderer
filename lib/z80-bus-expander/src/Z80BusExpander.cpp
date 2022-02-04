@@ -79,9 +79,12 @@ void Z80BusExpander::do_read_mem_block(uint16_t address, uint8_t *buffer, size_t
 {
 
     while (m_pic_busy.get_value() == 1);
-
     uint8_t set_addr_msb[] = { 0x90, (uint8_t)((address & 0xff00) >> 8) };
     transfer(set_addr_msb, nullptr, 2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    uint8_t set_addr_msb2[] = { 0x90, (uint8_t)((address & 0xff00) >> 8) };
+    transfer(set_addr_msb2, nullptr, 2);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     if ((address & 0x00ff) != 0)
