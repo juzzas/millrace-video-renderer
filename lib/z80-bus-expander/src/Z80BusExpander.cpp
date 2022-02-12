@@ -30,7 +30,7 @@ const std::string Z80BusExpander::Z80BUS_CHIP_GPIO_NAME = "gpiochip0";
 
 Z80BusExpander::Z80BusExpander()
         : m_bits(8),
-          m_speed(500000)
+          m_speed(4000000)
 {
     gpiod::line_request config;
 
@@ -107,7 +107,6 @@ void Z80BusExpander::do_read_mem_block(uint16_t address, uint8_t *buffer, size_t
     transfer(set_read_command, nullptr, 2);
 
     while (m_pic_data_ready.get_value() != 1);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     transfer(nullptr, buffer, buffer_size);
 #endif
