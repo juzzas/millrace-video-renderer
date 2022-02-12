@@ -105,7 +105,7 @@ FrameBufferStatus run_loop(void)
     {
         while (!quit)
         {
-            SDL_Delay(10);
+            SDL_Delay(100);
             SDL_PollEvent(&event);
 
             switch (event.type)
