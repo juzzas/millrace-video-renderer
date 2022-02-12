@@ -13,6 +13,18 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#undef MILLRACE_SW_TEST
+
+#ifdef MILLRACE_SW_TEST
+#define SCREEN_BASE    0xA400
+#define CHARACTER_BASE 0xAC00
+#else
+#define SCREEN_BASE    0x2400
+#define CHARACTER_BASE 0x2c00
+//#define CHARACTER_BASE 0x2800
+#endif
+
+
 #include "FrameBufferAce.h"
 FrameBufferAce::FrameBufferAce(SDL_Renderer *renderer): FrameBufferZ80()
 {
@@ -33,8 +45,8 @@ FrameBufferStatus FrameBufferAce::update()
 {
     int pixel_row, pixel_col;
 
-    m_z80.read_mem_block(0x9000, screen_ram, 768);
-    m_z80.read_mem_block(0x9800, character_ram, 1024);
+    m_z80.read_mem_block(SCREEN_BASE, screen_ram, 768);
+    m_z80.read_mem_block(CHARACTER_BASE, character_ram, 1024);
 
     for (pixel_row = 0; pixel_row < m_pixel_buffer_height; pixel_row++)
     {
