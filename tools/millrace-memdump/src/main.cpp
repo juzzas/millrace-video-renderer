@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
         po::options_description output("Output options");
         output.add_options()
-                ("type,y", po::value<std::string>()->value_name("TYPE")->default_value("hex"),
+                ("type,t", po::value<std::string>()->value_name("TYPE")->default_value("hex"),
                         "output type (raw, hex, ihex)")
                 ("output,o", po::value<std::string>()->value_name("FILE"),
                         "output file name")

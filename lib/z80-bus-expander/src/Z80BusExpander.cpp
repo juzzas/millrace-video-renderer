@@ -77,7 +77,6 @@ Z80BusExpander::~Z80BusExpander()
 
 void Z80BusExpander::do_read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
 {
-
     while (m_pic_busy.get_value() == 1);
     uint8_t set_addr_msb[] = { 0x90, (uint8_t)((address & 0xff00) >> 8) };
     transfer(set_addr_msb, nullptr, 2);
@@ -103,9 +102,36 @@ void Z80BusExpander::do_read_mem_block(uint16_t address, uint8_t *buffer, size_t
     }
 }
 
+void Z80BusExpander::do_write_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
+{
+    while (m_pic_busy.get_value() == 1);
+    uint8_t set_addr_msb[] = { 0x90, (uint8_t)((address & 0xff00) >> 8) };
+    transfer(set_addr_msb, nullptr, 2);
+
+    uint8_t set_addr_msb2[] = { 0x90, (uint8_t)((address & 0xff00) >> 8) };
+    transfer(set_addr_msb2, nullptr, 2);
+
+    if ((address & 0x00ff) != 0)
+    {
+        uint8_t set_addr_lsb[] = { 0xA0, (uint8_t)(address & 0xff) };
+        transfer(set_addr_lsb, nullptr, 2);
+    }
+
+    uint8_t set_write_command[] = {(uint8_t)(0xC0 | ((buffer_size & 0x0f00) >> 8)), (uint8_t)(buffer_size & 0x00ff) };
+    transfer(set_write_command, nullptr, 2);
+
+    // the PIC seems to struggle with more than one byte at a time.
+    while (m_pic_data_ready.get_value() != 1);
+    for (int i = 0; i < buffer_size; i++)
+    {
+        transfer(buffer, nullptr, 1);
+        buffer++;
+    }
+}
 
 void Z80BusExpander::write_mem_data(uint16_t address, uint8_t data)
 {
+    do_write_mem_block(address, &data, 1);
 }
 
 
@@ -122,11 +148,12 @@ uint8_t Z80BusExpander::read_mem_data(uint16_t address)
 void Z80BusExpander::read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
 {
     do_read_mem_block(address, buffer, buffer_size);
-    //for (auto i = 0; i < buffer_size; i++)
-    //    buffer[i] = (uint8_t)(i % 256);
-
 }
 
+void Z80BusExpander::write_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
+{
+    do_write_mem_block(address, buffer, buffer_size);
+}
 
 void Z80BusExpander::write_io_data(uint16_t address, uint8_t data)
 {

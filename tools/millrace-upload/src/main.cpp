@@ -15,9 +15,12 @@
 
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <thread>
 #include <vector>
+
+#include "Z80UploadFactory.h"
 
 namespace po = boost::program_options;
 
@@ -36,6 +39,8 @@ int main(int argc, char* argv[])
 
         po::options_description input("Output options");
         input.add_options()
+                ("type,t", po::value<std::string>()->value_name("TYPE")->default_value("hex"),
+                        "output type (raw, hex, ihex)")
                 ("address,a", po::value<int>()->value_name("ADDRESS"),
                         "address origin");
 
@@ -63,16 +68,30 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        if (args.count("output")) {
-            std::cout << "Output file: " << args["output"].as<std::string>() << std::endl;
-        }
+        std::shared_ptr<Z80Upload> upload = Z80UploadFactory::makeZ80Upload(
+            args["type"].as<std::string>()
+        );
+
 
         if (args.count("input-file")) {
             std::vector<std::string> files = args["input-file"].as<std::vector<std::string>>();
 
             for (const std::string &f : files) {
                 std::cout << "Input file: " << f << std::endl;
+                std::ifstream ifs;
+
+                ifs.open(f, std::ifstream::in | std::ios::binary);
+                ifs.unsetf(std::ios::skipws);
+
+                upload->process(ifs);
+
+                ifs.close();
             }
+        }
+        else
+        {
+            std::cout << "Output stdin" << std::endl;
+            upload->process(std::cin);
         }
 
     }

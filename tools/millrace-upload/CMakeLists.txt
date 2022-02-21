@@ -14,7 +14,9 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 add_executable(millrace-upload
-        src/main.cpp)
+        src/main.cpp
+        src/Z80Upload.cpp
+        src/Z80UploadFactory.cpp)
 
 target_link_libraries(millrace-upload
         ${SDL2_LIBRARIES}

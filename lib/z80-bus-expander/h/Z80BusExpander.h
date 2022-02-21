@@ -40,6 +40,7 @@ public:
 public:
     void write_mem_data(uint16_t address, uint8_t data);
     uint8_t read_mem_data(uint16_t address);
+    void write_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size);
     void read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size);
 
     void write_io_data(uint16_t address, uint8_t data);
@@ -54,6 +55,7 @@ private:
 
     void transfer(const uint8_t *message, uint8_t *response, size_t len) const;
     void do_read_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size);
+    void do_write_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size);
 
 
     std::string m_device_path;
