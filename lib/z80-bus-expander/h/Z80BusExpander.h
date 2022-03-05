@@ -26,6 +26,7 @@ class Z80BusExpander
 public:
     static const std::string Z80BUS_SPI_DEFAULT_DEVICE;
     static const std::string Z80BUS_CHIP_GPIO_NAME;
+    static const uint16_t READ_STEP;
 
     const uint8_t SPI_CONFIG_MODE = 0;
     const uint8_t SPI_CONFIG_BITS = 8;
