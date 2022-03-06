@@ -19,6 +19,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <filesystem>
 
 #include "Z80UploadFactory.h"
 
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
 
         po::options_description input("Output options");
         input.add_options()
-                ("type,t", po::value<std::string>()->value_name("TYPE")->default_value("hex"),
+                ("type,t", po::value<std::string>()->value_name("TYPE")->default_value("raw"),
                         "output type (raw, hex, ihex)")
                 ("address,a", po::value<int>()->value_name("ADDRESS"),
                         "address origin");
@@ -69,23 +70,36 @@ int main(int argc, char* argv[])
         }
 
         std::shared_ptr<Z80Upload> upload = Z80UploadFactory::makeZ80Upload(
-            args["type"].as<std::string>()
+            args["type"].as<std::string>(),
+            args["address"].as<int>()
         );
-
 
         if (args.count("input-file")) {
             std::vector<std::string> files = args["input-file"].as<std::vector<std::string>>();
 
             for (const std::string &f : files) {
+                uint16_t block_size = std::filesystem::file_size(f);
+
                 std::cout << "Input file: " << f << std::endl;
+                std::cout << "length: " << block_size << std::endl;
+
+                upload->set_block_size(block_size);
+
                 std::ifstream ifs;
 
                 ifs.open(f, std::ifstream::in | std::ios::binary);
                 ifs.unsetf(std::ios::skipws);
 
-                upload->process(ifs);
+                if (ifs.is_open())
+                {
+                    upload->process(ifs);
+                    ifs.close();
+                }
+                else
+                {
+                    std::cerr << "Unable to open file: " << f << std::endl;
+                }
 
-                ifs.close();
             }
         }
         else

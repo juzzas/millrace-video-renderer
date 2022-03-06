@@ -28,7 +28,7 @@ class Z80UploadFactory
 {
 public:
     static std::shared_ptr<Z80Upload>
-    makeZ80Upload(const std::string &type);
+    makeZ80Upload(const std::string &type, uint16_t origin);
 };
 
 

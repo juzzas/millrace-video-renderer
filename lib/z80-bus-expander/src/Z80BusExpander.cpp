@@ -28,6 +28,7 @@
 const std::string Z80BusExpander::Z80BUS_SPI_DEFAULT_DEVICE = "/dev/spidev0.0";
 const std::string Z80BusExpander::Z80BUS_CHIP_GPIO_NAME = "gpiochip0";
 const uint16_t Z80BusExpander::READ_STEP = 64;
+const uint16_t Z80BusExpander::WRITE_STEP = 64;
 
 Z80BusExpander::Z80BusExpander()
         : m_bits(8),
@@ -160,7 +161,14 @@ void Z80BusExpander::read_mem_block(uint16_t address, uint8_t *buffer, size_t bu
 
 void Z80BusExpander::write_mem_block(uint16_t address, uint8_t *buffer, size_t buffer_size)
 {
-    do_write_mem_block(address, buffer, buffer_size);
+    uint16_t bytes_left = buffer_size;
+
+    // do read in steps to give the Z80 a chance to do some work
+    for (int i = 0; i < buffer_size; i += READ_STEP)
+    {
+        do_write_mem_block(address + i, &buffer[i], (bytes_left > WRITE_STEP) ? WRITE_STEP : bytes_left);
+        bytes_left -= READ_STEP;
+    }
 }
 
 void Z80BusExpander::write_io_data(uint16_t address, uint8_t data)

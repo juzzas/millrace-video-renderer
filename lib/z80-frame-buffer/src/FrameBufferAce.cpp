@@ -26,7 +26,6 @@
 
 #define SCREEN_LENGTH 768
 #define CHARACTER_LENGTH 1024
-#define READ_STEP 64
 
 
 #include "FrameBufferAce.h"
@@ -51,17 +50,8 @@ FrameBufferStatus FrameBufferAce::update()
 
     int i;
 
-    // do read in steps to give the Z80 a chance to do some work
-    for (i = 0; i < SCREEN_LENGTH; i += READ_STEP)
-    {
-        m_z80.read_mem_block(SCREEN_BASE + i, &screen_ram[i], READ_STEP);
-    }
-
-    for (i = 0; i < CHARACTER_LENGTH; i += READ_STEP)
-    {
-        m_z80.read_mem_block(CHARACTER_BASE + i, &character_ram[i], READ_STEP);
-    }
-
+    m_z80.read_mem_block(SCREEN_BASE, screen_ram, SCREEN_LENGTH);
+    m_z80.read_mem_block(CHARACTER_BASE, character_ram, CHARACTER_LENGTH);
 
     for (pixel_row = 0; pixel_row < m_pixel_buffer_height; pixel_row++)
     {

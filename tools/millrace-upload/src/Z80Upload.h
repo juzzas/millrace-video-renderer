@@ -36,6 +36,9 @@ protected:
     std::vector<uint8_t> m_buffer;
     uint16_t m_origin;
     uint16_t m_block_size;
+public:
+    uint16_t get_block_size() const;
+    void set_block_size(uint16_t block_size);
 
 private:
     void do_write_mem();

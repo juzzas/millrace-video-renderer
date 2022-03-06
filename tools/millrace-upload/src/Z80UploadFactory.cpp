@@ -19,11 +19,11 @@
 #include <memory>
 
 std::shared_ptr<Z80Upload>
-Z80UploadFactory::makeZ80Upload(const std::string &type)
+Z80UploadFactory::makeZ80Upload(const std::string &type, uint16_t origin)
 {
     if (type == "raw")
     {
-        return std::make_shared<Z80Upload>();
+        return std::make_shared<Z80Upload>(origin);
     }
 
     return {nullptr};

@@ -13,6 +13,9 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <istream>
+#include <iostream>
+#include <iterator>
 #include "Z80Upload.h"
 
 
@@ -38,21 +41,25 @@ void Z80Upload::process(std::istream &is)
 void Z80Upload::do_process(std::istream &is)
 {
     // read data as a block:
-    is.read (&m_buffer[0], m_block_size);
+//    is.read (reinterpret_cast<char *>(&m_buffer[0]), m_block_size);
 
     // read the data:
     m_buffer.insert(m_buffer.begin(),
-               std::istream_iterator<uint8_t>(file),
+               std::istream_iterator<uint8_t>(is),
                std::istream_iterator<uint8_t>());
-
-
-    if (is)
-        std::cout << "all characters read successfully.";
-    else
-        std::cout << "error: only " << is.gcount() << " could be read";
 }
 
 void Z80Upload::do_write_mem()
 {
     m_z80.write_mem_block(m_origin, m_buffer.data(), m_block_size);
+}
+
+uint16_t Z80Upload::get_block_size() const
+{
+    return m_block_size;
+}
+
+void Z80Upload::set_block_size(uint16_t block_size)
+{
+    m_block_size = block_size;
 }
